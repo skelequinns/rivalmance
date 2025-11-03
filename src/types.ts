@@ -26,10 +26,10 @@ export interface RivalmanceMessageState {
         respect: number;
         frustration: number;
     };
+    significantMoments: string[]; // Accumulated moments up to this message
 }
 
 export interface RivalmanceChatState {
-    significantMoments: string[];
     totalInteractions: number;
 }
 
