@@ -98,6 +98,12 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     async afterResponse(botMessage: Message): Promise<Partial<StageResponse<ChatStateType, MessageStateType>>> {
         const { content } = botMessage;
 
+        // Store old values to calculate changes
+        const oldAffection = this.currentState.affection;
+        const oldRivalry = this.currentState.rivalry;
+        const oldRespect = this.currentState.respect;
+        const oldFrustration = this.currentState.frustration;
+
         // Parse rivalmance updates from the LLM response
         const updates = RivalmanceUtils.parseRivalmanceUpdates(content);
 
@@ -106,6 +112,14 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
         // Recalculate derived metrics
         RivalmanceUtils.recalculateMetrics(this.currentState, this.config);
+
+        // Calculate and store the changes for UI display
+        this.currentState.lastChanges = {
+            affection: this.currentState.affection - oldAffection,
+            rivalry: this.currentState.rivalry - oldRivalry,
+            respect: this.currentState.respect - oldRespect,
+            frustration: this.currentState.frustration - oldFrustration
+        };
 
         // Add significant moment to chat history if present
         if (updates.significant_moment) {
@@ -136,10 +150,25 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             chaosLevel,
             relationshipStage,
             lastInteractionType,
-            acceptedFeelings
+            acceptedFeelings,
+            lastChanges
         } = this.currentState;
 
         const { significantMoments, totalInteractions } = this.currentChatState;
+
+        // Helper to format change display
+        const formatChange = (value: number): string => {
+            if (value === 0) return '';
+            return value > 0 ? `+${value}` : `${value}`;
+        };
+
+        // Check if any changes occurred
+        const hasChanges = lastChanges && (
+            lastChanges.affection !== 0 ||
+            lastChanges.rivalry !== 0 ||
+            lastChanges.respect !== 0 ||
+            lastChanges.frustration !== 0
+        );
 
         return (
             <div className="rivalmance-container">
@@ -213,6 +242,34 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                         </div>
                     </div>
                 </div>
+
+                {hasChanges && (
+                    <div className="recent-changes-panel">
+                        <div className="recent-changes-header">Recent Changes:</div>
+                        <div className="recent-changes-list">
+                            {lastChanges.affection !== 0 && (
+                                <span className={`change-item ${lastChanges.affection > 0 ? 'positive' : 'negative'}`}>
+                                    Affection {formatChange(lastChanges.affection)}
+                                </span>
+                            )}
+                            {lastChanges.rivalry !== 0 && (
+                                <span className={`change-item ${lastChanges.rivalry > 0 ? 'positive' : 'negative'}`}>
+                                    Rivalry {formatChange(lastChanges.rivalry)}
+                                </span>
+                            )}
+                            {lastChanges.respect !== 0 && (
+                                <span className={`change-item ${lastChanges.respect > 0 ? 'positive' : 'negative'}`}>
+                                    Respect {formatChange(lastChanges.respect)}
+                                </span>
+                            )}
+                            {lastChanges.frustration !== 0 && (
+                                <span className={`change-item ${lastChanges.frustration > 0 ? 'warning' : 'positive'}`}>
+                                    Frustration {formatChange(lastChanges.frustration)}
+                                </span>
+                            )}
+                        </div>
+                    </div>
+                )}
 
                 <div className="status-panel">
                     <div className="status-item">
