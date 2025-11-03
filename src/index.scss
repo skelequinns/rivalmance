@@ -3,10 +3,10 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
-// Ensure that everything is transparent,
-// so that the chat page can be seen through the stage
+// Base transparency for chat integration
 * {
   background-color: transparent !important;
   overflow: hidden !important;
@@ -15,4 +15,222 @@
 html, body, #root {
   margin: 0;
   padding: 0;
+}
+
+// Rivalmance Container Styles
+.rivalmance-container {
+  padding: 16px;
+  color: #e0e0e0;
+  font-size: 14px;
+  max-width: 100%;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  background-color: rgba(30, 30, 35, 0.95) !important;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.rivalmance-header {
+  text-align: center;
+  margin-bottom: 20px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 12px;
+
+  h2 {
+    margin: 0 0 8px 0;
+    font-size: 24px;
+    font-weight: 700;
+    color: #ffffff;
+    background: linear-gradient(135deg, #ff1744 0%, #f50057 50%, #ff6f00 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .tagline {
+    margin: 0;
+    font-size: 13px;
+    font-style: italic;
+    color: #b0b0b0;
+    background-color: transparent !important;
+  }
+}
+
+.metrics-panel {
+  margin-bottom: 20px;
+}
+
+.metric {
+  margin-bottom: 12px;
+
+  .metric-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #ffffff;
+
+    .metric-value {
+      color: #b0b0b0;
+      font-weight: 400;
+    }
+  }
+
+  .metric-bar-container {
+    width: 100%;
+    height: 20px;
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .metric-bar {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.5s ease, background-color 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.status-panel {
+  background-color: rgba(255, 255, 255, 0.03) !important;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.status-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 13px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  .status-label {
+    font-weight: 600;
+    color: #b0b0b0;
+  }
+
+  .status-value {
+    font-weight: 600;
+    color: #ffffff;
+
+    &.interaction-type {
+      text-transform: uppercase;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background-color: rgba(100, 181, 246, 0.2) !important;
+      color: #64b5f6;
+    }
+
+    &.chaos-level-high {
+      color: #ff1744;
+      animation: pulse 1.5s infinite;
+    }
+
+    &.chaos-level-medium {
+      color: #ffa726;
+    }
+
+    &.chaos-level-low {
+      color: #ffcc80;
+    }
+  }
+
+  .badge {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 2px 6px;
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 3px;
+    background-color: rgba(33, 150, 243, 0.3) !important;
+    color: #64b5f6;
+    text-transform: uppercase;
+
+    &.warning {
+      background-color: rgba(255, 23, 68, 0.3) !important;
+      color: #ff1744;
+    }
+  }
+}
+
+.moments-panel {
+  background-color: rgba(255, 255, 255, 0.03) !important;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: #ffffff;
+    font-size: 13px;
+    user-select: none;
+    padding: 4px 0;
+
+    &:hover {
+      color: #64b5f6;
+    }
+  }
+
+  .moments-list {
+    margin: 8px 0 0 0;
+    padding-left: 20px;
+    list-style: none;
+
+    li {
+      margin-bottom: 6px;
+      font-size: 12px;
+      color: #b0b0b0;
+      padding: 4px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &::before {
+        content: '▸ ';
+        color: #ff6f00;
+        margin-right: 4px;
+      }
+    }
+  }
+}
+
+.info-panel {
+  background-color: rgba(255, 152, 0, 0.08) !important;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 152, 0, 0.2);
+
+  small {
+    font-size: 11px;
+    color: #ffcc80;
+    line-height: 1.4;
+
+    strong {
+      color: #ffa726;
+    }
+  }
+}
+
+// Animations
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
 }
