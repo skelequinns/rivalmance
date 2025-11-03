@@ -1,61 +1,534 @@
-![](demo.GIF)
+# ⚔️ Rivalmance ❤️
 
-# Stage Template for Chub
+> "I don't know whether I want to kiss you or kill you."
 
-This is a template stage that does nothing, to be used as a base
-when developing stages. Please clone it [from GitHub](https://github.com/CharHubAI/stage-template) to use as a template.
+A Chub Stage that creates a dynamic rivalmance system for AI character interactions. **Rivalmance** is a romance that develops through rivalry, competition, and tension rather than friendship and cooperation.
 
-# Overview
+![Rivalmance System](demo.GIF)
 
-A Stage is a software component written by other people that can be used within a chat with a language model. They are meant to add functionality like expression packs (showing a character's emotional state with a set of images), UIs for mini-games, special prompt handling, or even interacting with third-party APIs. If you're familiar with React and/or TypeScript, you can write a stage yourself.
+---
 
-### Stage Use Cases
-- Creating a UI for a world, character, or setting
-- Making RPGs and other multimedia experiences
-- Custom stat blocks that can do math and handle state correctly
-- Specific input/output handling in code to deal with quirks of a particular model
+## What is Rivalmance?
 
-### Why develop a stage instead of making something from scratch?
-- **Intuitive Development:** The stages framework and platform were created with developers in mind from the ground up, resulting in as straightforward an interface as possible with a negligible learning curve. 
-- **Cross-Platform:** Stages are write once, run everywhere. When you commit, your stage is immediately built and available on the web, iOS and Android mobile devices, and the Vision Pro, with support for more platforms incoming. 
-- **Multimedia:** Language, imagery, audio, and everything else can add up to a half-dozen or more APIs and interfaces that need to be set up, tested, monitored. With a stage, a unified interface for all of it is built in.
-- **Audience Reach:** Many gaming and multimedia platforms ban GenAI content outright, or have userbases hostile to it. Chub has millions of people specifically here for generative AI.
-- **Peace of Mind:** It has become a trope for passion projects using OpenAI and other APIs to get destroyed by hostiles reverse engineering it into a free proxy. If developed as a stage, it's not your problem, and you can focus on what matters.
-- **Actively Developed Platform:** This is just the beginning. Scheduling, full VR/AR support, non-React implementations, and more are incoming.
+Rivalmance creates a unique romantic dynamic based on **competitive tension** where {{char}} and {{user}} are equals constantly competing with each other. Unlike traditional romance systems:
 
+- 🔥 **Affection doesn't soften rivalry** - The more {{char}} falls for {{user}}, the more intense the competition becomes
+- 😤 **Frustration grows with feelings** - {{char}} becomes increasingly frustrated by their unwanted attraction
+- 🏆 **Respect earned through competition** - Rivalry builds respect, which enables deeper emotional connection
+- ⚡ **Chaos at high affection** - Higher affection = more erratic and unpredictable behavior
+- 💔 **Love doesn't eliminate rivalry** - Even at maximum affection, competitive dynamics remain central
 
-# Meta -- But Why?
+---
 
-As far as why this has been created, I’m trying to go where the puck is going instead of where it is, and I think there’s a need for something like itch.io for generative AI where (1) developers don’t have to worry about integrations and devops and (2) there’s an audience of people that are already explicitly on the AI side of the pro/anti discussion.
+## Core Features
 
-This is basically in the early stages of “do developers want this?” with a fraction of what I want to do with it if the answer is yes. The current license is to prevent competing platforms, and if it turns out to be something there is strong interest in it would be going the way of itch where it’s not just commercial use allowed but explicitly a platform for indies to monetize through.
+### 📊 Dynamic Relationship Tracking
 
-# Latest Documentation
+The system tracks **four core metrics** (0-100):
 
-The latest documentation is at [https://docs.chub.ai/docs/stages](https://docs.chub.ai/docs/stages).
+| Metric | Description | How It Changes |
+|--------|-------------|----------------|
+| **Affection** | Attraction to {{user}} | Physical contact, compliments, vulnerability moments |
+| **Rivalry** | Competitive intensity | Challenges, competitions, "I'll beat you" statements |
+| **Respect** | Recognition as equal | Acknowledging skill, worthy opponent, impressive displays |
+| **Frustration** | Annoyance at feelings | Auto-calculated: `(affection × rivalry) / 100` |
 
-# Quickstart
+### 🎭 Four Relationship Stages
 
-You'll need node@21.7.1 and yarn installed.
-Then, to get started:
+Progression based on affection level:
 
-``` 
-git clone https://github.com/CharHubAI/stage-template
-cd stage-template
-yarn install
-yarn dev
+1. **🚫 Denial (0-25)**
+   - Dismisses any attraction
+   - Focuses purely on rivalry and competition
+   - Reframes romantic tension as competitive energy
+
+2. **😵 Confusion (26-50)**
+   - Notices conflicting feelings
+   - Behavior becomes inconsistent
+   - Doesn't understand why {{user}} affects them
+
+3. **⚔️ Resistance (51-75)**
+   - Actively fights against feelings
+   - Behavior highly erratic and chaotic
+   - Alternates between aggression and vulnerability
+
+4. **💔 Acceptance (76-100)**
+   - Accepts complicated feelings
+   - Expresses affection through competitive teasing
+   - Rivalry remains core to the relationship
+
+### ⚡ Chaos System
+
+When affection exceeds the threshold (default: 50), a **chaos level** (0-10) tracks behavioral unpredictability:
+
+- **Low (1-3)**: Subtle inconsistencies in behavior
+- **Moderate (4-6)**: Emotional control slipping, mood swings
+- **High (7-10)**: Highly unpredictable - sudden intimacy, confessions followed by denial, unexpected contact during arguments
+
+### 🤖 Dual-Approach Tracking
+
+**Primary Method: AI Self-Reporting**
+- The system instructs the LLM to include hidden tags:
+  ```
+  [RIVALMANCE_UPDATE: affection_change=+3, rivalry_change=+5, respect_change=+2, interaction_type=competitive]
+  ```
+- Most accurate when the AI follows instructions
+
+**Fallback Method: Content Analysis**
+- If no tags detected, automatically analyzes message content
+- Pattern-based detection:
+  - Affection: Blushes, physical contact, "can't stop thinking about", reluctant care
+  - Rivalry: Challenges, "I'll beat you", competitive language
+  - Respect: "Impressive", "worthy opponent", skill acknowledgment
+  - Interaction types: Competitive/romantic/confrontational keywords
+- Ensures metrics **always update** regardless of AI model compliance
+
+### 📈 Recent Changes Display
+
+Visual feedback panel showing what just changed:
+- Only appears when metrics update
+- Color-coded badges:
+  - 🟢 **Green**: Positive increases (affection, rivalry, respect up)
+  - 🔴 **Red**: Decreases
+  - 🟠 **Orange**: Frustration increases (warning)
+- Example: `[Affection +3] [Rivalry +5] [Respect +2]`
+
+### 💾 State Restoration & Chat Tree Navigation
+
+Perfect consistency across branching conversations:
+- Each message saves complete state snapshot
+- Jumping back restores exact values from that point
+- Swipes/alternate responses maintain separate progressions
+- Example:
+  ```
+  Message A: Affection 13 → Recent Changes: +3
+  Message B: Affection 15 → Recent Changes: +2
+  Jump back to A → Shows Affection 13, Changes: +3 ✓
+  ```
+
+### 🎨 Visual UI
+
+**Metric Bars**
+- Color-coded progress bars for all four metrics
+- Smooth animated transitions (0.5s)
+- Gradient colors reflecting intensity:
+  - Affection: Red gradient (light pink → deep red)
+  - Rivalry: Orange gradient (light orange → burnt orange)
+  - Respect: Blue gradient (light blue → deep blue)
+  - Frustration: Purple gradient (lavender → deep purple)
+
+**Status Panel**
+- Current relationship stage with emoji
+- Chaos level indicator (⚡ symbols when active)
+- Last interaction type badge
+- Total interactions counter
+
+**Significant Moments**
+- Collapsible history of key relationship events
+- Auto-detected: First confession, first kiss, major confrontations
+- Tracked across entire chat (not branch-specific)
+
+---
+
+## How It Works
+
+### Message Flow
+
+```
+┌─────────────────────────────────────────────────────────┐
+│ 1. User sends message: "I beat you again!"             │
+└─────────────────────────────────────────────────────────┘
+                            ↓
+┌─────────────────────────────────────────────────────────┐
+│ 2. beforePrompt() injects stage directions:            │
+│    [Current state: Affection=10, Rivalry=50...]        │
+│    [Stage: DENIAL - Focus on competition...]           │
+│    [Include: [RIVALMANCE_UPDATE: ...] at end]          │
+└─────────────────────────────────────────────────────────┘
+                            ↓
+┌─────────────────────────────────────────────────────────┐
+│ 3. AI generates response:                              │
+│    "Beginner's luck. Rematch. Now."                    │
+│    [RIVALMANCE_UPDATE: affection_change=+2,            │
+│     rivalry_change=+5, respect_change=+3,              │
+│     interaction_type=competitive]                      │
+└─────────────────────────────────────────────────────────┘
+                            ↓
+┌─────────────────────────────────────────────────────────┐
+│ 4. afterResponse() processes:                          │
+│    - Parses tags OR runs content analysis              │
+│    - Updates metrics: Affection 10→12, Rivalry 50→55   │
+│    - Recalculates: Frustration 5→7, Stage: Denial      │
+│    - Stores changes: {affection:+2, rivalry:+5}        │
+│    - Strips tags from displayed message                │
+└─────────────────────────────────────────────────────────┘
+                            ↓
+┌─────────────────────────────────────────────────────────┐
+│ 5. UI displays:                                        │
+│    Affection: 12/100 [████░░░░░░░░░░░]                │
+│    Recent Changes: [Affection +2] [Rivalry +5]         │
+└─────────────────────────────────────────────────────────┘
 ```
 
-The class you'll need to fill out and implement is in src/Stage.tsx.
+### Content Analysis Examples
 
-When running locally, as there is no chat UI/running chat, src/TestRunner.tsx is run. This only runs in development.
-Please modify it to test whatever you need.
+**Competitive Victory:**
+```
+AI: "I'll beat you next time! That's a promise!"
+Detected: "beat you" (+2 rivalry), "next time" (+2 rivalry), challenge tone
+Result: Rivalry +4
+```
 
-This project uses GitHub actions to update the stage in Chub on 
-commits to the main branch. For your project to do this,
-you'll need to get a stage auth token from [the api](https://api.chub.ai/openapi/swagger#/User%20Account/create_projects_token_account_tokens_projects_post).
+**Reluctant Affection:**
+```
+AI: "I hate that I keep thinking about you... Not that I care!"
+Detected: "hate that I" (+3 affection), "thinking about" (+2 affection), "not that I care" (+2 affection)
+Result: Affection +7, Frustration increases
+```
 
-Then in the GitHub project, go to Settings -> Secrets and Variables -> Actions ->
-Repository secrets -> New Repository Secret. Add the token with the name "CHUB_AUTH_TOKEN".
+**Respect Gain:**
+```
+AI: "You're actually skilled. I acknowledge you as a worthy opponent."
+Detected: "skilled" (+3 respect), "worthy opponent" (+4 respect)
+Result: Respect +7
+```
 
-The use of an IDE like Intellij is very strongly recommended.
+---
+
+## Configuration
+
+Users can customize initial values (via Chub UI or config):
+
+```yaml
+startingAffection: 10        # Initial attraction (0-100)
+startingRivalry: 50          # Initial competitive intensity (0-100)
+startingRespect: 30          # Initial respect level (0-100)
+chaosThreshold: 50           # Affection level when chaos begins (0-100)
+frustrationMultiplier: 1.0   # How fast frustration grows (0.5-2.0)
+```
+
+**Example Configurations:**
+
+**Enemies to Lovers (Slow Burn)**
+```yaml
+startingAffection: 5
+startingRivalry: 80
+startingRespect: 20
+chaosThreshold: 60
+```
+
+**Established Rivals (Fast Progression)**
+```yaml
+startingAffection: 30
+startingRivalry: 70
+startingRespect: 60
+chaosThreshold: 40
+```
+
+---
+
+## Technical Implementation
+
+### Architecture
+
+```
+src/
+├── types.ts              # TypeScript interfaces and types
+├── rivalmanceUtils.ts    # Core utility functions (calculations, parsing)
+├── contentAnalyzer.ts    # Pattern-based content analysis fallback
+├── Stage.tsx             # Main stage logic (lifecycle hooks)
+└── index.scss            # UI styling and animations
+```
+
+### Key Classes
+
+**RivalmanceUtils**
+- `parseRivalmanceUpdates()` - Parse tags with content analysis fallback
+- `applyUpdates()` - Update metrics with bounds checking (0-100)
+- `recalculateMetrics()` - Calculate frustration, chaos, stage
+- `generateStageDirections()` - Create adaptive prompt instructions
+
+**RivalmanceContentAnalyzer**
+- `analyzeContent()` - Full content analysis when tags missing
+- `detectInteractionType()` - Classify interaction (competitive/romantic/confrontational/neutral)
+- `detectAffectionChange()` - Pattern matching for affection indicators
+- `detectRivalryChange()` - Competition and challenge detection
+- `detectRespectChange()` - Skill acknowledgment and respect shifts
+
+**Stage (Main Class)**
+- `beforePrompt()` - Inject stage directions, increment counter
+- `afterResponse()` - Parse updates, calculate changes, update state
+- `setState()` - Restore state when navigating chat tree
+- `render()` - Display UI with metrics and status
+
+### State Management
+
+**MessageState (Per-Message)**
+- Saved with each message node in chat tree
+- Contains: affection, rivalry, respect, frustration, chaos, stage, lastChanges
+- Fully restored when jumping back in conversation
+
+**ChatState (Chat-Wide)**
+- Persists across all branches
+- Contains: significantMoments[], totalInteractions
+- Not affected by swipes or navigation
+
+### Metric Calculations
+
+**Frustration:**
+```typescript
+frustration = Math.floor((affection × rivalry) / 100 × frustrationMultiplier)
+```
+- Higher when both affection and rivalry are high
+- Represents internal conflict
+
+**Chaos Level:**
+```typescript
+if (affection >= chaosThreshold) {
+  chaosProgress = (affection - threshold) / (100 - threshold)
+  frustrationBonus = frustration / 100
+  chaosLevel = Math.floor((chaosProgress + frustrationBonus) × 5)
+}
+```
+- Only activates above threshold
+- Scales with both affection and frustration
+
+**Relationship Stage:**
+- Denial: affection 0-25
+- Confusion: affection 26-50
+- Resistance: affection 51-75
+- Acceptance: affection 76-100
+
+---
+
+## Development
+
+### Prerequisites
+
+- Node.js 21.7.1 (other versions may work but aren't officially supported)
+- npm or yarn
+
+### Local Development
+
+```bash
+# Install dependencies
+npm install
+
+# Run development server (uses TestRunner.tsx)
+npm run dev
+
+# Build for production
+npm run build
+
+# Lint code
+npm run lint
+```
+
+### Project Structure
+
+```
+rivalmance/
+├── src/
+│   ├── types.ts                 # Type definitions
+│   ├── rivalmanceUtils.ts       # Utility functions
+│   ├── contentAnalyzer.ts       # Content analysis fallback
+│   ├── Stage.tsx                # Main implementation
+│   ├── index.scss               # Styling
+│   ├── App.tsx                  # App entry point
+│   ├── TestRunner.tsx           # Local testing
+│   └── assets/
+│       └── test-init.json       # Test data
+├── public/
+│   ├── chub_meta.yaml           # Stage metadata
+│   └── characters/              # Character definitions
+├── .github/
+│   └── workflows/
+│       └── deploy.yml           # CI/CD pipeline
+├── package.json                 # Dependencies
+├── tsconfig.json                # TypeScript config
+└── vite.config.ts               # Build config
+```
+
+### Testing Locally
+
+Modify `src/assets/test-init.json` to test different scenarios:
+```json
+{
+  "config": {
+    "startingAffection": 30,
+    "startingRivalry": 70
+  },
+  "users": { ... },
+  "characters": { ... }
+}
+```
+
+Run `npm run dev` to see the UI and test interactions.
+
+---
+
+## Deployment
+
+### Automatic Deployment via GitHub Actions
+
+1. Get stage auth token from [Chub API](https://api.chub.ai/openapi/swagger#/User%20Account/create_projects_token_account_tokens_projects_post)
+2. In GitHub: Settings → Secrets and Variables → Actions → New Repository Secret
+3. Add token with name `CHUB_AUTH_TOKEN`
+4. Push to `main` or `master` branch - automatically deploys to Chub
+
+The workflow:
+- Builds TypeScript + Vite bundle
+- Generates/retrieves extension ID from Chub API
+- Uploads artifacts to Chub platform
+- Stage becomes available in Chub's stage library
+
+---
+
+## Usage Examples
+
+### Example 1: Competitive Victory
+
+**User:** "I beat you again! That's three in a row."
+
+**AI (with tags):** "Beginner's luck. Next time I won't go easy on you... not that I did this time! Rematch. Now. [RIVALMANCE_UPDATE: affection_change=+2, rivalry_change=+5, respect_change=+3, interaction_type=competitive]"
+
+**Result:**
+- Affection: 10 → 12
+- Rivalry: 50 → 55
+- Respect: 30 → 33
+- Frustration: 5 → 7 (auto-calculated)
+- Recent Changes: `[Affection +2] [Rivalry +5] [Respect +3]`
+
+### Example 2: Reluctant Compliment (No Tags)
+
+**AI:** "You're... not terrible at this. Don't let it go to your head."
+
+**Content Analysis Detects:**
+- "not terrible" → compliment pattern (+2 affection)
+- "don't let it go to your head" → tsundere deflection (+1 affection)
+- Acknowledgment of skill → +2 respect
+
+**Result:**
+- Affection: 12 → 15
+- Respect: 33 → 35
+- Recent Changes: `[Affection +3] [Respect +2]`
+
+### Example 3: High Chaos Confession
+
+**Context:** Affection 85, Chaos Level 8
+
+**AI:** "I hate you! I hate that you— *grabs your collar* Why do you make me feel like this?! *pushes away* Forget I said anything. We have a competition to finish. [RIVALMANCE_UPDATE: affection_change=+4, rivalry_change=+2, interaction_type=confrontational, significant_moment="Accidental confession"]"
+
+**Result:**
+- Affection: 85 → 89
+- Rivalry: 80 → 82
+- Stage: ACCEPTANCE
+- Chaos Level: 9 (HIGH - pulsing animation)
+- Significant Moment logged: "[#47] Accidental confession"
+
+---
+
+## Design Philosophy
+
+### Core Principles
+
+1. **Tension Over Harmony**
+   - Romance develops through conflict, not cooperation
+   - Competition fuels attraction
+
+2. **Frustration as Feature**
+   - Characters are annoyed by their feelings
+   - This creates interesting dynamics and dialogue
+
+3. **Respect as Foundation**
+   - Only equals can have true rivalmance
+   - Condescension kills the dynamic
+
+4. **Chaos is Growth**
+   - Erratic behavior signals emotional development
+   - Predictability would undermine the premise
+
+5. **Love Doesn't "Fix" Anyone**
+   - Even at max affection, rivalry persists
+   - The competitive dynamic is the relationship
+
+### Anti-Patterns Avoided
+
+❌ Softening character when affection increases
+❌ Rivalry decreasing as romance grows
+❌ Characters becoming submissive or docile
+❌ Losing competitive edge at high affection
+❌ "Taming" the rivalry into friendship
+
+### What Makes Good Rivalmance
+
+✅ Competitive teasing as flirting
+✅ Aggressive compliments ("You're not bad... for now")
+✅ Physical tension during arguments
+✅ Reluctant vulnerability quickly deflected
+✅ Challenges as love language
+✅ Respect shown through acknowledgment of skill
+
+---
+
+## About Chub Stages
+
+Chub Stages are interactive React components that run alongside AI character chats on the Chub platform.
+
+### Benefits of Chub Stages
+
+- **Write once, run everywhere**: Web, iOS, Android, Vision Pro
+- **No DevOps required**: Built-in hosting, distribution, updates
+- **Built-in audience**: Millions of users on Chub platform
+- **Multimedia support**: Language, imagery, audio via unified interface
+- **API protection**: No worrying about key theft or reverse engineering
+- **Cross-platform distribution**: Automatic deployment to all platforms
+
+### Resources
+
+- [Chub Stages Documentation](https://docs.chub.ai/docs/stages)
+- [Chub Stages TypeScript Library](https://github.com/CharHubAI/chub-stages-ts)
+- [Stage Template Repository](https://github.com/CharHubAI/stage-template)
+- [Chub Platform](https://chub.ai)
+
+---
+
+## Contributing
+
+Contributions welcome! Areas for enhancement:
+
+- Additional content analysis patterns
+- More sophisticated chaos behaviors
+- Alternative relationship progression paths
+- Customizable UI themes
+- Localization/language support
+- Advanced metrics (jealousy, pride, etc.)
+
+Please feel free to submit issues or pull requests.
+
+---
+
+## License
+
+See LICENSE file for details.
+
+---
+
+## Acknowledgments
+
+Built with:
+- [Chub Stages Framework](https://docs.chub.ai/docs/stages)
+- React 18
+- TypeScript
+- Vite
+- SCSS
+
+Inspired by the "enemies to lovers" and "rivals to romance" tropes in fiction.
+
+---
+
+**Note:** This stage works best with AI models that can follow complex instructions. Performance may vary by model. The dual-approach system (tags + content analysis) ensures functionality across all models, but tag-based tracking provides more accurate results when the AI complies.
+
+---
+
+*"The line between hatred and love is thinner than you think."*
