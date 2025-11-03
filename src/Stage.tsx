@@ -41,6 +41,15 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         // Initialize or restore message state
         if (messageState && this.isValidRivalmanceState(messageState)) {
             this.currentState = messageState as RivalmanceMessageState;
+            // Ensure backward compatibility - add lastChanges if missing
+            if (!this.currentState.lastChanges) {
+                this.currentState.lastChanges = {
+                    affection: 0,
+                    rivalry: 0,
+                    respect: 0,
+                    frustration: 0
+                };
+            }
         } else {
             this.currentState = RivalmanceUtils.initializeState(this.config);
         }
@@ -74,7 +83,17 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
     async setState(state: MessageStateType): Promise<void> {
         if (state != null && this.isValidRivalmanceState(state)) {
-            this.currentState = {...this.currentState, ...state};
+            // Fully restore the state, ensuring lastChanges exists for backward compatibility
+            this.currentState = {
+                ...this.currentState,
+                ...state,
+                lastChanges: state.lastChanges || {
+                    affection: 0,
+                    rivalry: 0,
+                    respect: 0,
+                    frustration: 0
+                }
+            };
         }
     }
 
