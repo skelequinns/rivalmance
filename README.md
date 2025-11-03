@@ -4,8 +4,6 @@
 
 A Chub Stage that creates a dynamic rivalmance system for AI character interactions. **Rivalmance** is a romance that develops through rivalry, competition, and tension rather than friendship and cooperation.
 
-![Rivalmance System](demo.GIF)
-
 ---
 
 ## What is Rivalmance?
