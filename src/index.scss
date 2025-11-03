@@ -94,6 +94,62 @@ html, body, #root {
   }
 }
 
+// Recent Changes Panel
+.recent-changes-panel {
+  background: linear-gradient(135deg, rgba(33, 150, 243, 0.1) 0%, rgba(255, 152, 0, 0.1) 100%) !important;
+  padding: 10px 12px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  border: 1px solid rgba(100, 181, 246, 0.3);
+  animation: slideIn 0.3s ease-out;
+
+  .recent-changes-header {
+    font-size: 12px;
+    font-weight: 700;
+    color: #64b5f6;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .recent-changes-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .change-item {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+
+    &.positive {
+      background-color: rgba(76, 175, 80, 0.25) !important;
+      color: #81c784;
+      border: 1px solid rgba(76, 175, 80, 0.4);
+    }
+
+    &.negative {
+      background-color: rgba(244, 67, 54, 0.25) !important;
+      color: #e57373;
+      border: 1px solid rgba(244, 67, 54, 0.4);
+    }
+
+    &.warning {
+      background-color: rgba(255, 152, 0, 0.25) !important;
+      color: #ffb74d;
+      border: 1px solid rgba(255, 152, 0, 0.4);
+    }
+  }
+}
+
 .status-panel {
   background-color: rgba(255, 255, 255, 0.03) !important;
   padding: 12px;
@@ -232,5 +288,16 @@ html, body, #root {
   }
   50% {
     opacity: 0.6;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

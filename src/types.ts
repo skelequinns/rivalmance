@@ -20,6 +20,12 @@ export interface RivalmanceMessageState {
     acceptedFeelings: boolean;  // Has char accepted their feelings?
     relationshipStage: RelationshipStage;
     lastInteractionType: InteractionType;
+    lastChanges: {              // Track most recent changes for UI display
+        affection: number;
+        rivalry: number;
+        respect: number;
+        frustration: number;
+    };
 }
 
 export interface RivalmanceChatState {

@@ -247,7 +247,13 @@ export class RivalmanceUtils {
             chaosLevel: 0,
             acceptedFeelings: false,
             relationshipStage: 'denial',
-            lastInteractionType: 'neutral'
+            lastInteractionType: 'neutral',
+            lastChanges: {
+                affection: 0,
+                rivalry: 0,
+                respect: 0,
+                frustration: 0
+            }
         };
         this.recalculateMetrics(state, fullConfig);
         return state;
