@@ -45,9 +45,9 @@ export interface RivalmanceUpdate {
 }
 
 export const DEFAULT_CONFIG: Required<RivalmanceConfig> = {
-    startingAffection: 10,
-    startingRivalry: 50,
-    startingRespect: 30,
+    startingAffection: 5,
+    startingRivalry: 80,
+    startingRespect: 20,
     chaosThreshold: 50,
-    frustrationMultiplier: 1.0
+    frustrationMultiplier: 1.5
 };
