@@ -7,7 +7,8 @@
 }
 
 // Base transparency for chat integration
-* {
+// Exclude metric bars from transparent background rule
+*:not(.metric-bar):not(.change-item) {
   background-color: transparent !important;
   overflow: hidden !important;
 }
@@ -88,9 +89,11 @@ html, body, #root {
 
   .metric-bar {
     height: 100%;
+    min-width: 2px; // Ensure bar is visible even at 1-2%
     border-radius: 10px;
     transition: width 0.5s ease, background-color 0.3s ease;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    display: block; // Ensure proper rendering
   }
 }
 
