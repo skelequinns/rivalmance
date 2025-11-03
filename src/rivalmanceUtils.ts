@@ -9,6 +9,7 @@ import {
     DEFAULT_CONFIG,
     RelationshipStage
 } from './types';
+import { RivalmanceContentAnalyzer } from './contentAnalyzer';
 
 export class RivalmanceUtils {
 
@@ -17,13 +18,15 @@ export class RivalmanceUtils {
     }
 
     static parseRivalmanceUpdates(content: string): RivalmanceUpdate {
-        const update: RivalmanceUpdate = {};
+        let update: RivalmanceUpdate = {};
+        let foundTags = false;
 
         // Look for [RIVALMANCE_UPDATE: ...] tags
         const updateRegex = /\[RIVALMANCE_UPDATE:\s*([^\]]+)\]/gi;
         const matches = content.matchAll(updateRegex);
 
         for (const match of matches) {
+            foundTags = true;
             const params = match[1];
 
             // Parse affection_change
@@ -58,6 +61,11 @@ export class RivalmanceUtils {
             if (momentMatch) {
                 update.significant_moment = momentMatch[1];
             }
+        }
+
+        // FALLBACK: If no tags found, analyze content directly
+        if (!foundTags) {
+            update = RivalmanceContentAnalyzer.analyzeContent(content);
         }
 
         return update;
