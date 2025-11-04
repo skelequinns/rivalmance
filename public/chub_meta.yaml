@@ -1,11 +1,11 @@
-# All of these fields are optional, as is this file itself,
+# All  of these fields are optional, as is this file itself,
 #   in which case these values can be managed in the UI.
 
 # The name of the stage.
 project_name: "Rivalmance for Character Bots"
 
 # A short tagline to show in search.
-tagline: "A template for all bots that enables Rivalmance mechanics"
+# tagline: "A base template for all stages."
 
 # 'PUBLIC', 'PRIVATE', or 'UNLISTED'.
 visibility: 'UNLISTED'
@@ -18,7 +18,7 @@ visibility: 'UNLISTED'
 #   but leave the text input box.
 # 'FULLSCREEN' will make nothing below the header bar
 #   show except for your stage.
-position: 'ADJACENT'
+# position: 'ADJACENT'
 
 # Self-explanatory.
 tags:
@@ -128,5 +128,5 @@ state_schema:
 github_path: 'https://github.com/skelequinns/rivalmance'
 
 
-extension_id: 'rivalmance-c48f4e5d0f28'
+extension_id: 'rivalmance-98bc110fc1cd'
 
