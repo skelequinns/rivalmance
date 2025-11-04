@@ -5,6 +5,9 @@ import {
     RivalmanceConfig,
     RivalmanceMessageState,
     RivalmanceChatState,
+    RivalmanceInitState,
+    PresetName,
+    PRESETS,
     DEFAULT_CONFIG
 } from './types';
 import { RivalmanceUtils } from './rivalmanceUtils';
@@ -29,14 +32,27 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     private currentState: RivalmanceMessageState;
     private currentChatState: RivalmanceChatState;
     private config: Required<RivalmanceConfig>;
+    private initState: RivalmanceInitState;
 
     constructor(data: InitialData<InitStateType, ChatStateType, MessageStateType, ConfigType>) {
         super(data);
 
-        const { config, messageState, chatState } = data;
+        const { config, messageState, chatState, initState } = data;
 
-        // Parse config with defaults
-        this.config = { ...DEFAULT_CONFIG, ...(config || {}) };
+        // Initialize or restore init state
+        if (initState && (initState as any).setupComplete) {
+            this.initState = initState as RivalmanceInitState;
+            // Use the selected preset's config if available
+            if (this.initState.selectedPreset) {
+                this.config = PRESETS[this.initState.selectedPreset].config;
+            } else {
+                this.config = { ...DEFAULT_CONFIG, ...(config || {}) };
+            }
+        } else {
+            // First time - setup not complete
+            this.initState = { setupComplete: false };
+            this.config = { ...DEFAULT_CONFIG, ...(config || {}) };
+        }
 
         // Initialize or restore message state
         if (messageState && this.isValidRivalmanceState(messageState)) {
@@ -79,9 +95,35 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         return {
             success: true,
             error: null,
-            initState: { initialized: true },
+            initState: this.initState as any,
             chatState: this.currentChatState,
         };
+    }
+
+    private selectPreset(presetName: PresetName): void {
+        // Update initState
+        this.initState = {
+            setupComplete: true,
+            selectedPreset: presetName
+        };
+
+        // Update config
+        this.config = PRESETS[presetName].config;
+
+        // Initialize state with new config
+        this.currentState = RivalmanceUtils.initializeState(this.config);
+
+        // Force a re-render
+        // The initState will be persisted through load() on next instantiation
+        this.forceUpdate();
+    }
+
+    private forceUpdate(): void {
+        // Trigger a re-render by updating component state
+        // This is framework-dependent but works in the Chub Stages environment
+        if (typeof (this as any).setState === 'function') {
+            (this as any).setState({});
+        }
     }
 
     async setState(state: MessageStateType): Promise<void> {
@@ -166,6 +208,43 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     }
 
     render(): ReactElement {
+        // Show preset selection UI if setup not complete
+        if (!this.initState.setupComplete) {
+            return (
+                <div className="rivalmance-container">
+                    <div className="rivalmance-header">
+                        <h2>⚔️ Rivalmance ❤️</h2>
+                        <p className="tagline">"I don't know whether I want to kiss you or kill you."</p>
+                    </div>
+
+                    <div className="preset-selection">
+                        <h3>Choose Your Dynamic</h3>
+                        <p className="preset-description">Select a preset to begin your rivalmance journey:</p>
+
+                        <div className="preset-buttons">
+                            {(Object.entries(PRESETS) as [PresetName, typeof PRESETS[PresetName]][]).map(([key, preset]) => (
+                                <button
+                                    key={key}
+                                    className="preset-button"
+                                    onClick={() => this.selectPreset(key)}
+                                >
+                                    <div className="preset-emoji">{preset.emoji}</div>
+                                    <div className="preset-name">{preset.name}</div>
+                                    <div className="preset-desc">{preset.description}</div>
+                                    <div className="preset-stats">
+                                        <div className="preset-stat">Affection: {preset.config.startingAffection}</div>
+                                        <div className="preset-stat">Rivalry: {preset.config.startingRivalry}</div>
+                                        <div className="preset-stat">Respect: {preset.config.startingRespect}</div>
+                                    </div>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Normal UI after setup
         const {
             affection,
             rivalry,
