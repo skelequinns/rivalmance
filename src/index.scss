@@ -322,6 +322,14 @@ html, body, #root {
     font-size: 14px;
     color: #b0b0b0;
   }
+
+  .preset-hint {
+    margin: 16px 0 0 0;
+    font-size: 13px;
+    color: #ffcc80;
+    font-style: italic;
+    text-align: center;
+  }
 }
 
 .preset-buttons {
@@ -353,6 +361,20 @@ html, body, #root {
 
   &:active {
     transform: translateY(0);
+  }
+
+  &:disabled,
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+
+    &:hover {
+      border-color: rgba(255, 255, 255, 0.1);
+      transform: none;
+      box-shadow: none;
+      background: linear-gradient(135deg, rgba(60, 60, 70, 0.8) 0%, rgba(40, 40, 50, 0.8) 100%) !important;
+    }
   }
 
   .preset-emoji {
