@@ -50,16 +50,19 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                     frustration: 0
                 };
             }
+            // Ensure backward compatibility - add significantMoments if missing
+            if (!this.currentState.significantMoments) {
+                this.currentState.significantMoments = [];
+            }
         } else {
             this.currentState = RivalmanceUtils.initializeState(this.config);
         }
 
         // Initialize or restore chat state
-        if (chatState && chatState.significantMoments) {
+        if (chatState && chatState.totalInteractions !== undefined) {
             this.currentChatState = chatState as RivalmanceChatState;
         } else {
             this.currentChatState = {
-                significantMoments: [],
                 totalInteractions: 0
             };
         }
@@ -83,7 +86,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
     async setState(state: MessageStateType): Promise<void> {
         if (state != null && this.isValidRivalmanceState(state)) {
-            // Fully restore the state, ensuring lastChanges exists for backward compatibility
+            // Fully restore the state, ensuring backward compatibility
             this.currentState = {
                 ...this.currentState,
                 ...state,
@@ -92,7 +95,8 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                     rivalry: 0,
                     respect: 0,
                     frustration: 0
-                }
+                },
+                significantMoments: state.significantMoments || []
             };
         }
     }
@@ -140,11 +144,12 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             frustration: this.currentState.frustration - oldFrustration
         };
 
-        // Add significant moment to chat history if present
+        // Add significant moment to accumulated history if present
         if (updates.significant_moment) {
-            this.currentChatState.significantMoments.push(
+            this.currentState.significantMoments = [
+                ...this.currentState.significantMoments,
                 `[#${this.currentChatState.totalInteractions}] ${updates.significant_moment}`
-            );
+            ];
         }
 
         // Strip the rivalmance tags from the message before displaying
@@ -170,10 +175,11 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             relationshipStage,
             lastInteractionType,
             acceptedFeelings,
-            lastChanges
+            lastChanges,
+            significantMoments
         } = this.currentState;
 
-        const { significantMoments, totalInteractions } = this.currentChatState;
+        const { totalInteractions } = this.currentChatState;
 
         // Helper to format change display
         const formatChange = (value: number): string => {

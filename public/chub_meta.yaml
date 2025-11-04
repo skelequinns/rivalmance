@@ -21,11 +21,12 @@ visibility: 'UNLISTED'
 # position: 'ADJACENT'
 
 # Self-explanatory.
-# tags:
-#  - 'Stage'
-#  - 'Admin'
-#  - 'Template'
-#  - 'Base'
+tags:
+ - 'Romance'
+ - 'Rivalry'
+ - 'Relationship'
+ - 'Stats'
+ - 'Dynamic'
 
 # The schema of any user-supplied config.
 # If your stage requires a configuration but has no
@@ -33,9 +34,41 @@ visibility: 'UNLISTED'
 config_schema:
   type: object
   properties:
-    health:
+    startingAffection:
       type: integer
-      default: 100
+      default: 10
+      minimum: 0
+      maximum: 100
+      title: "Starting Affection"
+      description: "How attracted {{char}} is to {{user}} at the start (0-100). Lower = cold start, Higher = existing tension."
+    startingRivalry:
+      type: integer
+      default: 50
+      minimum: 0
+      maximum: 100
+      title: "Starting Rivalry"
+      description: "Intensity of competitive tension at the start (0-100). Higher = more intense rivalry."
+    startingRespect:
+      type: integer
+      default: 30
+      minimum: 0
+      maximum: 100
+      title: "Starting Respect"
+      description: "How much {{char}} respects {{user}} as an equal at the start (0-100). Higher = established respect."
+    chaosThreshold:
+      type: integer
+      default: 50
+      minimum: 0
+      maximum: 100
+      title: "Chaos Threshold"
+      description: "Affection level when chaos behavior begins (0-100). Lower = earlier chaos, Higher = delayed chaos."
+    frustrationMultiplier:
+      type: number
+      default: 1.0
+      minimum: 0.5
+      maximum: 2.0
+      title: "Frustration Multiplier"
+      description: "How quickly frustration grows (0.5-2.0). Higher = more frustration."
 
 # The schema of the state that you store.
 # This isn't needed even if you do store state,
@@ -45,21 +78,37 @@ state_schema:
   init:
     type: object
     properties:
-      grid:
-        type: string
+      initialized:
+        type: boolean
+        default: false
   message:
     type: object
     properties:
-      angry:
+      affection:
+        type: integer
+      rivalry:
+        type: integer
+      respect:
+        type: integer
+      frustration:
+        type: integer
+      chaosLevel:
+        type: integer
+      acceptedFeelings:
         type: boolean
-        default: true
+      relationshipStage:
+        type: string
+      lastInteractionType:
+        type: string
+      significantMoments:
+        type: array
+        items:
+          type: string
   chat:
     type: object
     properties:
-      visited:
-        type: array
-        items:
-          type: integer
+      totalInteractions:
+        type: integer
 
 # Whether to publish as 'Anonymous' instead of under your username.
 # is_anonymous: false

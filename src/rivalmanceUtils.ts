@@ -253,7 +253,8 @@ export class RivalmanceUtils {
                 rivalry: 0,
                 respect: 0,
                 frustration: 0
-            }
+            },
+            significantMoments: []
         };
         this.recalculateMetrics(state, fullConfig);
         return state;
