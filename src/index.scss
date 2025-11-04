@@ -304,3 +304,113 @@ html, body, #root {
     transform: translateY(0);
   }
 }
+
+// Preset Selection Styles
+.preset-selection {
+  text-align: center;
+  padding: 20px 0;
+
+  h3 {
+    margin: 0 0 8px 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .preset-description {
+    margin: 0 0 24px 0;
+    font-size: 14px;
+    color: #b0b0b0;
+  }
+
+  .preset-hint {
+    margin: 16px 0 0 0;
+    font-size: 13px;
+    color: #ffcc80;
+    font-style: italic;
+    text-align: center;
+  }
+}
+
+.preset-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.preset-button {
+  background: linear-gradient(135deg, rgba(60, 60, 70, 0.8) 0%, rgba(40, 40, 50, 0.8) 100%) !important;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  color: inherit;
+  font-family: inherit;
+  width: 100%;
+
+  &:hover {
+    border-color: rgba(255, 111, 0, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 111, 0, 0.3);
+    background: linear-gradient(135deg, rgba(70, 70, 80, 0.9) 0%, rgba(50, 50, 60, 0.9) 100%) !important;
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:disabled,
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+
+    &:hover {
+      border-color: rgba(255, 255, 255, 0.1);
+      transform: none;
+      box-shadow: none;
+      background: linear-gradient(135deg, rgba(60, 60, 70, 0.8) 0%, rgba(40, 40, 50, 0.8) 100%) !important;
+    }
+  }
+
+  .preset-emoji {
+    font-size: 48px;
+    margin-bottom: 12px;
+  }
+
+  .preset-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 8px;
+  }
+
+  .preset-desc {
+    font-size: 13px;
+    color: #b0b0b0;
+    margin-bottom: 16px;
+    line-height: 1.4;
+  }
+
+  .preset-stats {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+    .preset-stat {
+      font-size: 11px;
+      color: #ffcc80;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  }
+}

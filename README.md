@@ -119,6 +119,65 @@ Perfect consistency across branching conversations:
 - Auto-detected: First confession, first kiss, major confrontations
 - Tracked across entire chat (not branch-specific)
 
+## Configuration
+
+When you first start a chat with the Rivalmance stage enabled, you'll see a **preset selection screen** with three pre-configured dynamics to choose from. This ensures balanced starting values and prevents invalid configurations.
+
+### Available Presets
+
+#### ⚔️ Enemies to Lovers (Slow Burn)
+*High tension, bitter rivals - classic enemies-to-lovers dynamic*
+
+```yaml
+Starting Affection: 5       # Barely any initial attraction
+Starting Rivalry: 75        # Intense competitive tension
+Starting Respect: 20        # Minimal respect
+Chaos Threshold: 60         # Chaos starts at moderate affection
+Frustration Multiplier: 1.5 # Faster frustration build-up
+```
+
+**Best for:** Classic enemies-to-lovers stories, slow-burn romance, high tension narratives where characters start by genuinely disliking each other.
+
+---
+
+#### ⚖️ Balanced
+*Equal mix of rivalry and attraction from the start*
+
+```yaml
+Starting Affection: 20      # Noticeable initial attraction
+Starting Rivalry: 60        # Strong competitive element
+Starting Respect: 30        # Moderate respect
+Chaos Threshold: 60         # Standard chaos activation
+Frustration Multiplier: 1.0 # Normal frustration growth
+```
+
+**Best for:** Traditional rivals-to-lovers, sports/competition settings, academic rivals, characters who are intrigued by each other from the start.
+
+---
+
+#### 🔥 Established Rivalry (Fast Progression)
+*Deep mutual respect, faster progression - they already know each other well*
+
+```yaml
+Starting Affection: 30      # Clear attraction present
+Starting Rivalry: 70        # Very high competitive drive
+Starting Respect: 60        # Strong mutual respect
+Chaos Threshold: 40         # Chaos activates early
+Frustration Multiplier: 0.5 # Slower frustration (better control)
+```
+
+**Best for:** Long-time rivals with history, professional rivals, characters who've competed for years and secretly admire each other, faster-paced romance.
+
+---
+
+### How to Choose
+
+Simply **click the preset button** that matches your desired dynamic when you first open the chat. Your selection is saved and persists throughout the chat session. The preset cannot be changed mid-chat, so choose carefully!
+
+Each preset button shows:
+- 🎯 **Emoji and name** for easy identification
+- 📝 **Description** of the dynamic
+- 📊 **Starting values** for Affection, Rivalry, and Respect
 
 **Note:** This stage works best with AI models that can follow complex instructions. Performance may vary by model. The dual-approach system (tags + content analysis) ensures functionality across all models, but tag-based tracking provides more accurate results when the AI complies.
 

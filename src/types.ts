@@ -44,10 +44,57 @@ export interface RivalmanceUpdate {
     significant_moment?: string;
 }
 
-export const DEFAULT_CONFIG: Required<RivalmanceConfig> = {
-    startingAffection: 5,
-    startingRivalry: 80,
-    startingRespect: 20,
-    chaosThreshold: 50,
-    frustrationMultiplier: 1.5
+export interface RivalmanceInitState {
+    setupComplete: boolean;
+    selectedPreset?: PresetName;
+}
+
+export type PresetName = 'enemies-to-lovers' | 'balanced' | 'established-rivalry';
+
+export interface PresetConfig {
+    name: string;
+    description: string;
+    emoji: string;
+    config: Required<RivalmanceConfig>;
+}
+
+export const PRESETS: Record<PresetName, PresetConfig> = {
+    'enemies-to-lovers': {
+        name: 'Enemies to Lovers',
+        description: 'Slow burn, high tension - they start as bitter rivals',
+        emoji: '⚔️',
+        config: {
+            startingAffection: 5,
+            startingRivalry: 75,
+            startingRespect: 20,
+            chaosThreshold: 60,
+            frustrationMultiplier: 1.5
+        }
+    },
+    'balanced': {
+        name: 'Balanced',
+        description: 'Equal mix of rivalry and attraction from the start',
+        emoji: '⚖️',
+        config: {
+            startingAffection: 20,
+            startingRivalry: 60,
+            startingRespect: 30,
+            chaosThreshold: 60,
+            frustrationMultiplier: 1.0
+        }
+    },
+    'established-rivalry': {
+        name: 'Established Rivalry',
+        description: 'Fast progression - they already respect each other deeply',
+        emoji: '🔥',
+        config: {
+            startingAffection: 30,
+            startingRivalry: 70,
+            startingRespect: 60,
+            chaosThreshold: 40,
+            frustrationMultiplier: 0.5
+        }
+    }
 };
+
+export const DEFAULT_CONFIG: Required<RivalmanceConfig> = PRESETS['enemies-to-lovers'].config;
