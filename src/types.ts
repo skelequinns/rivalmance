@@ -31,6 +31,8 @@ export interface RivalmanceMessageState {
 
 export interface RivalmanceChatState {
     totalInteractions: number;
+    selectedPreset?: PresetName; // Store preset selection in ChatState for persistence
+    setupComplete: boolean;
 }
 
 export type RelationshipStage = 'denial' | 'confusion' | 'resistance' | 'acceptance';

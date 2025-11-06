@@ -5,7 +5,6 @@ import {
     RivalmanceConfig,
     RivalmanceMessageState,
     RivalmanceChatState,
-    RivalmanceInitState,
     PresetName,
     PRESETS,
     DEFAULT_CONFIG
@@ -32,27 +31,28 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     private currentState: RivalmanceMessageState;
     private currentChatState: RivalmanceChatState;
     private config: Required<RivalmanceConfig>;
-    private initState: RivalmanceInitState;
     private pendingPresetSelection: PresetName | null = null; // Store selection until first message
 
     constructor(data: InitialData<InitStateType, ChatStateType, MessageStateType, ConfigType>) {
         super(data);
 
-        const { config, messageState, chatState, initState } = data;
+        const { config, messageState, chatState } = data;
 
-        // Initialize or restore init state
-        // Check if initState exists and has setupComplete explicitly set to true
-        if (initState && (initState as RivalmanceInitState).setupComplete === true) {
-            this.initState = initState as RivalmanceInitState;
+        // Initialize or restore chat state (now includes preset selection)
+        if (chatState && typeof (chatState as any).setupComplete === 'boolean') {
+            this.currentChatState = chatState as RivalmanceChatState;
             // Use the selected preset's config if available
-            if (this.initState.selectedPreset) {
-                this.config = PRESETS[this.initState.selectedPreset].config;
+            if (this.currentChatState.selectedPreset) {
+                this.config = PRESETS[this.currentChatState.selectedPreset].config;
             } else {
                 this.config = { ...DEFAULT_CONFIG, ...(config || {}) };
             }
         } else {
-            // First time - setup not complete
-            this.initState = { setupComplete: false };
+            // First time - setup not complete, or upgrading from old version
+            this.currentChatState = {
+                totalInteractions: (chatState as any)?.totalInteractions || 0,
+                setupComplete: false
+            };
             this.config = DEFAULT_CONFIG; // Use default until preset selected
         }
 
@@ -75,15 +75,6 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         } else {
             this.currentState = RivalmanceUtils.initializeState(this.config);
         }
-
-        // Initialize or restore chat state
-        if (chatState && chatState.totalInteractions !== undefined) {
-            this.currentChatState = chatState as RivalmanceChatState;
-        } else {
-            this.currentChatState = {
-                totalInteractions: 0
-            };
-        }
     }
 
     private isValidRivalmanceState(state: any): boolean {
@@ -94,21 +85,9 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     }
 
     async load(): Promise<Partial<LoadResponse<InitStateType, ChatStateType, MessageStateType>>> {
-        // If setup is not complete, don't return messageState yet
-        if (!this.initState.setupComplete) {
-            return {
-                success: true,
-                error: null,
-                initState: this.initState as any,
-                chatState: this.currentChatState,
-                messageState: null
-            };
-        }
-
         return {
             success: true,
             error: null,
-            initState: this.initState as any,
             chatState: this.currentChatState,
         };
     }
@@ -156,16 +135,14 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
     async beforePrompt(userMessage: Message): Promise<Partial<StageResponse<ChatStateType, MessageStateType>>> {
         // Check if this is the first message and setup is not complete
-        if (!this.initState.setupComplete) {
+        if (!this.currentChatState.setupComplete) {
             if (this.pendingPresetSelection) {
                 // User selected a preset - apply it now
                 const preset = PRESETS[this.pendingPresetSelection];
 
-                // Update initState and mark as complete
-                this.initState = {
-                    setupComplete: true,
-                    selectedPreset: this.pendingPresetSelection
-                };
+                // Update chatState and mark as complete
+                this.currentChatState.setupComplete = true;
+                this.currentChatState.selectedPreset = this.pendingPresetSelection;
 
                 // Initialize state with the selected preset's config
                 this.currentState = RivalmanceUtils.initializeState(this.config);
@@ -183,7 +160,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                     modifiedMessage: null,
                     systemMessage: `✅ ${preset.emoji} ${preset.name} selected! Your rivalmance begins...`,
                     error: null,
-                    chatState: this.currentChatState,
+                    chatState: this.currentChatState, // This persists the selection!
                 };
             } else {
                 // No preset selected yet - show error
@@ -264,7 +241,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
     render(): ReactElement {
         // Show preset selection UI if setup not complete
-        if (!this.initState.setupComplete) {
+        if (!this.currentChatState.setupComplete) {
             return (
                 <div className="rivalmance-container">
                     <div className="rivalmance-header">
