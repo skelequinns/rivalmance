@@ -18,6 +18,32 @@ Rivalmance creates a unique romantic dynamic based on **competitive tension** wh
 
 ---
 
+## How Does It Work? (Simple Explanation)
+
+Think of Rivalmance as an invisible scorekeeper that watches your conversation and tracks how the relationship is developing.
+
+**What it tracks:**
+- **How attracted** the character is to you (even if they won't admit it!)
+- **How competitive** they feel - do they want to prove themselves against you?
+- **How much they respect you** as an equal or worthy opponent
+- **How frustrated** they are about having feelings they don't want
+
+**How it learns:**
+The bot reads every message from the character and looks for clues. Did they blush? That's affection going up. Did they challenge you to a competition? Rivalry increases. Did they call you impressive? Respect grows. The bot picks up on all these little details automatically.
+
+**What happens over time:**
+As you chat, the character progresses through stages - first denying any attraction, then getting confused by their feelings, then fighting against those feelings, and finally accepting them. But here's the twist: even when they fall for you, they still want to compete with you! That's the heart of rivalmance.
+
+**The cool part:**
+If you use the "swipe" feature to try different responses or jump back to earlier messages, the bot remembers exactly where the relationship was at that point. So if you had a "first kiss" moment but swipe it away to try something different, that kiss never happened - the bot forgets it and tracks only what actually occurs in your current conversation path.
+
+**What you see:**
+Colorful bars showing the four main relationship scores, notifications when things change, and a list of important moments (like first confessions or big arguments) that happened along the way.
+
+That's it! You just chat normally, and the bot handles all the relationship tracking behind the scenes, making the character respond naturally to how things are developing.
+
+---
+
 ## Core Features
 
 ### 📊 Dynamic Relationship Tracking
