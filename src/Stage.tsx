@@ -119,6 +119,8 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     async setState(state: MessageStateType): Promise<void> {
         if (state != null && this.isValidRivalmanceState(state)) {
             // Fully restore the state, ensuring backward compatibility
+            // This is called when user jumps back or swipes to a previous message
+            // We restore the exact significantMoments array from that point in time
             this.currentState = {
                 ...this.currentState,
                 ...state,
@@ -128,7 +130,9 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                     respect: 0,
                     frustration: 0
                 },
-                significantMoments: state.significantMoments || []
+                // Explicitly restore moments from the specific message state
+                // This ensures moments from "future" messages (that were swiped away) don't persist
+                significantMoments: Array.isArray(state.significantMoments) ? [...state.significantMoments] : []
             };
         }
     }
@@ -219,11 +223,25 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         };
 
         // Add significant moment to accumulated history if present
+        // This builds on the current significantMoments array, which may have been
+        // restored from a previous message via setState (when user swipes/jumps back)
         if (updates.significant_moment) {
-            this.currentState.significantMoments = [
-                ...this.currentState.significantMoments,
-                `[#${this.currentChatState.totalInteractions}] ${updates.significant_moment}`
-            ];
+            const newMoment = `[#${this.currentChatState.totalInteractions}] ${updates.significant_moment}`;
+
+            // Ensure we're building from the current state (which may have been restored)
+            const currentMoments = Array.isArray(this.currentState.significantMoments)
+                ? this.currentState.significantMoments
+                : [];
+
+            // Check for duplicate to avoid re-adding the same moment if state restoration issues occur
+            const isDuplicate = currentMoments.some(moment => moment === newMoment);
+
+            if (!isDuplicate) {
+                this.currentState.significantMoments = [...currentMoments, newMoment];
+            } else {
+                // Keep existing moments if duplicate detected
+                this.currentState.significantMoments = currentMoments;
+            }
         }
 
         // Strip the rivalmance tags from the message before displaying

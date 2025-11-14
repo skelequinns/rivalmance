@@ -104,7 +104,10 @@ export class RivalmanceContentAnalyzer {
         const physicalIndicators = [
             { pattern: /\b(grab|grasp|hold|touch|stroke|caress)\b/g, value: 3 },
             { pattern: /\b(lean (in|close)|move closer)\b/g, value: 2 },
-            { pattern: /\b(kiss|kissed|kissing)\b/g, value: 5 }
+            // High value for contextual kiss (action-based)
+            { pattern: /(\*[^*]*kiss[^*]*\*|lips\s+(met|touched|pressed|brushed)|lean(ed)?\s+in\s+(and\s+)?kiss)/g, value: 5 },
+            // Lower value for just mentioning kiss without action context
+            { pattern: /\b(kiss|kissed|kissing)\b/g, value: 1 }
         ];
 
         // Count all matches
@@ -198,10 +201,14 @@ export class RivalmanceContentAnalyzer {
             return "Confession of feelings";
         }
 
-        // First kiss
-        if (/\b(kiss|kissed|kissing)\b/.test(lowerContent) &&
-            /\b(first|finally|at last)\b/.test(lowerContent)) {
-            return "First kiss";
+        // First kiss - improved detection with context
+        if (this.isActualKiss(lowerContent)) {
+            const hasTemporalContext =
+                /\b(first|finally|at last)\b/.test(lowerContent);
+
+            if (hasTemporalContext) {
+                return "First kiss";
+            }
         }
 
         // Reluctant admission
@@ -227,5 +234,32 @@ export class RivalmanceContentAnalyzer {
             }
         }
         return count;
+    }
+
+    /***
+     * Determine if content describes an actual kiss (not just mentioning the word)
+     * Uses scoring system to differentiate between actual kisses and false positives
+     */
+    private static isActualKiss(lowerContent: string): boolean {
+        let score = 0;
+
+        // Must contain kiss word
+        if (!/\b(kiss|kissed|kissing)\b/.test(lowerContent)) return false;
+
+        // Positive indicators (+points)
+        if (/\*[^*]*(kiss|lips)[^*]*\*/.test(lowerContent)) score += 3; // Action text in asterisks
+        if (/\b(lips?|mouth)\s+(met|touched|pressed|brushed|captured)\b/.test(lowerContent)) score += 3;
+        if (/\b(lean(ed|s|ing)?\s+(in|close)|pull(ed|s|ing)?\s+(close|in)|move(d|s)?\s+closer)\b/.test(lowerContent)) score += 2;
+        if (/\b(gentle|passionate|soft|warm|sweet|tender|quick|sudden)\s+(kiss|lips)\b/.test(lowerContent)) score += 2;
+        if (/\b(taste|breath|heartbeat|chest)\b/.test(lowerContent)) score += 1;
+        if (/\b(close|closer|inches away)\b/.test(lowerContent)) score += 1;
+
+        // Negative indicators (-points)
+        if (/\b(don't|won't|can't|shouldn't|never|not|no)\s+\w*\s*kiss\b/.test(lowerContent)) score -= 5;
+        if (/\b(about|mention|talk|say|word|idea of|thought of)\s+\w*\s*kiss/.test(lowerContent)) score -= 3;
+        if (/\b(refuse|avoid|resist|pull away|reject|deny)\b/.test(lowerContent)) score -= 3;
+        if (/"[^"]*kiss[^"]*"/.test(lowerContent)) score -= 2; // Just dialogue
+
+        return score >= 3;
     }
 }
