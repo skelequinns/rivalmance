@@ -259,4 +259,25 @@ export class RivalmanceUtils {
         this.recalculateMetrics(state, fullConfig);
         return state;
     }
+
+    /***
+     * Validates and filters significant moments to ensure integrity
+     * Removes any moments that occur after the given interaction number
+     * This helps maintain consistency when users swipe back or jump to earlier messages
+     */
+    static filterMomentsByInteraction(moments: string[], maxInteraction: number): string[] {
+        if (!Array.isArray(moments)) return [];
+
+        return moments.filter(moment => {
+            // Extract interaction number from format: "[#123] Description"
+            const match = moment.match(/^\[#(\d+)\]/);
+            if (match) {
+                const interactionNum = parseInt(match[1]);
+                // Only keep moments from interactions at or before the current point
+                return interactionNum <= maxInteraction;
+            }
+            // Keep moments without interaction numbers (backward compatibility)
+            return true;
+        });
+    }
 }
